@@ -1,0 +1,137 @@
+import 'package:flutter/material.dart';
+
+// --- 1. Main Function to run the application ---
+void main() {
+  runApp(const MyApp());
+}
+
+// --- 2. The main application widget ---
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Soh\'s Simple App',
+      // Define a custom primary color for a friendly look
+      theme: ThemeData(
+        primarySwatch: Colors.teal,
+        useMaterial3: true,
+      ),
+      home: const HomePage(),
+    );
+  }
+}
+
+// --- 3. The Home Screen with all required widgets ---
+class HomePage extends StatelessWidget {
+  const HomePage({super.key});
+
+  // A placeholder URL for demonstration purposes
+  final String imageUrl = 'https://placehold.co/400x200/4c7c8c/FFFFFF/png?text=Dart+App';
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      // A. Title bar with the app name
+      appBar: AppBar(
+        title: const Text(
+          'Soh\'s Simple App',
+          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+        ),
+        backgroundColor: Colors.teal,
+        centerTitle: true,
+        elevation: 4,
+      ),
+      
+      // B. Centered layout
+      body: Center(
+        // C. Centered Column to stack widgets vertically
+        child: Padding(
+          padding: const EdgeInsets.all(24.0),
+          child: Column(
+            // Ensure the content is centered in the column
+            mainAxisAlignment: MainAxisAlignment.center,
+            // Stretch content horizontally to look good
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: <Widget>[
+              // D. Text widget displaying a welcome message
+              const Text(
+                'Welcome to the Dart Week 5 UI Assignment!',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.teal,
+                ),
+              ),
+
+              // Proper spacing (Vertical)
+              const SizedBox(height: 32),
+
+              // E. Image widget that loads and displays an image from the internet
+              // Using a Card for better visual framing
+              Card(
+                elevation: 6,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(12),
+                  child: Image.network(
+                    imageUrl,
+                    // Use a simple error builder to handle potential loading issues
+                    errorBuilder: (context, error, stackTrace) => 
+                      const Center(child: Icon(Icons.broken_image, size: 50, color: Colors.red)),
+                    loadingBuilder: (context, child, loadingProgress) {
+                      if (loadingProgress == null) return child;
+                      return Center(
+                        child: CircularProgressIndicator(
+                          value: loadingProgress.expectedTotalBytes != null
+                              ? loadingProgress.cumulativeBytesLoaded /
+                                  loadingProgress.expectedTotalBytes!
+                              : null,
+                        ),
+                      );
+                    },
+                    height: 200,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ),
+
+              // Proper spacing
+              const SizedBox(height: 32),
+
+              // F. ElevatedButton widget that prints a message to the console when clicked
+              ElevatedButton(
+                onPressed: () {
+                  // Print the message to the console on click
+                  print('>>> Soh\'s Button Clicked! Event handled successfully.');
+                  
+                  // Optional: Show a brief visual confirmation to the user
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Message logged to console!'),
+                      duration: Duration(seconds: 1),
+                    ),
+                  );
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.teal.shade400,
+                  foregroundColor: Colors.white,
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+                child: const Text(
+                  'Click Me (Check Console)',
+                  style: TextStyle(fontSize: 18),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
